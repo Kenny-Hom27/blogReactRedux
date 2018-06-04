@@ -1,8 +1,24 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
 import { Field , reduxForm} from 'redux-form'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createPost } from '../actions'
+
+const FIELDS = {
+  title: {
+    type: 'input',
+    label: 'Title'
+  },
+  categories: {
+    type: 'input',
+    label: 'Category'
+  },
+  content: {
+    type: 'textarea',
+    label: 'Content'
+  }
+}
 
 class PostsNew extends Component {
 
@@ -45,24 +61,19 @@ class PostsNew extends Component {
 const validate = (values) => {
   const errors = {}
 
-  if (!values.title) {
-    errors.title = 'Enter a title!'
-  }
-
-  if (!values.categories) {
-    errors.categories = 'Enter some categories!'
-  }
-
-  if (!values.content) {
-    errors.content = 'Enter some content!'
-  }
+  _.each(FIELDS, (type, field) => {
+    if (!values.field) {
+      errors[field] = `Enter ${field}`
+    }
+  })
 
   return errors
 }
 
 export default reduxForm({
   validate,
-  form: 'PostsNewForm'
+  form: 'PostsNewForm',
+  fields: _.keys(FIELDS)
 })(
   connect(null, { createPost })(PostsNew)
 )
